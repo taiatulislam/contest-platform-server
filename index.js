@@ -45,6 +45,14 @@ async function run() {
             res.send(result)
         })
 
+        // Contest details by id
+        app.get('/details/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await contests.findOne(query);
+            res.send(result)
+        })
+
         // Popular
         app.get('/popular', async (req, res) => {
             const query = { attemptCount: { $gt: 0 } };
