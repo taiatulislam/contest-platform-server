@@ -29,6 +29,14 @@ async function run() {
             res.send('Server is running')
         })
 
+        // All contests
+        app.get('/allContest/:category', async (req, res) => {
+            const category = req.params.category;
+            const query = { category: category }
+            const result = await contests.find(query).toArray();
+            res.send(result)
+        })
+
         // Search by category
         app.get('/search/:category', async (req, res) => {
             const category = req.params.category;
