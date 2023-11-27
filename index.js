@@ -55,9 +55,17 @@ async function run() {
 
         // Popular
         app.get('/popular', async (req, res) => {
-            const query = { attemptCount: { $gt: 0 } };
-            const options = { sort: { attemptCount: -1 } };
+            const query = { participant: { $size: 1 } };
+            const options = { sort: { participant: -1 } };
             const result = await contests.find(query, options).limit(5).toArray();
+            res.send(result)
+        })
+
+        // User participants
+        app.get('/user/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { participant: email }
+            const result = await contests.find(query).toArray();
             res.send(result)
         })
 
