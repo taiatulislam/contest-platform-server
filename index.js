@@ -118,6 +118,18 @@ async function run() {
             res.send(result)
         })
 
+        app.patch('/allContest', async (req, res) => {
+            const user = req.body;
+            const filter = { _id: new ObjectId(user.id) }
+            const updateDoc = {
+                $set: {
+                    status: user.status
+                }
+            }
+            const result = await contests.updateOne(filter, updateDoc);
+            res.send(result)
+        })
+
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
