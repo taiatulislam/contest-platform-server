@@ -16,7 +16,9 @@ const client = new MongoClient(uri, {
 });
 
 // Middleware
-app.use(cors());
+app.use(cors({
+    origin: ['http://localhost:5173']
+}));
 app.use(express.json());
 
 async function run() {
@@ -24,9 +26,22 @@ async function run() {
         // await client.connect();
 
         const contests = client.db("contestDB").collection("contests");
+        const userCollection = client.db("contestDB").collection("users");
 
         app.get('/', (req, res) => {
             res.send('Server is running')
+        })
+
+        // store user data
+        app.post('/users', async (req, res) => {
+            const user = req.body;
+            const query = { email: user.email }
+            const existingUser = await userCollection.findOne(query);
+            if (existingUser) {
+                return res.send({ message: 'user already exist', insertedId: null })
+            }
+            const result = await userCollection.insertOne(user);
+            res.send(result)
         })
 
         // All contests
