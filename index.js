@@ -44,6 +44,20 @@ async function run() {
             res.send(result)
         })
 
+        // All user
+        app.get('/allUser', async (req, res) => {
+            const result = await userCollection.find().toArray();
+            res.send(result)
+        })
+
+        // Find user role
+        app.get('/userRole/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email }
+            const result = await userCollection.findOne(query);
+            res.send(result)
+        })
+
         // All contests
         app.get('/allContest/:category', async (req, res) => {
             const category = req.params.category;
