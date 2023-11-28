@@ -58,7 +58,13 @@ async function run() {
             res.send(result)
         })
 
-        // All contests
+        // All user
+        app.get('/allContest', async (req, res) => {
+            const result = await contests.find().toArray();
+            res.send(result)
+        })
+
+        // All contests by category
         app.get('/allContest/:category', async (req, res) => {
             const category = req.params.category;
             const query = { category: category }
@@ -95,6 +101,20 @@ async function run() {
             const email = req.params.email;
             const query = { participant: email }
             const result = await contests.find(query).toArray();
+            res.send(result)
+        })
+
+
+        // Admin Dashboard
+        app.patch('/allUser', async (req, res) => {
+            const user = req.body;
+            const filter = { email: user.email }
+            const updateDoc = {
+                $set: {
+                    role: user.role
+                }
+            }
+            const result = await userCollection.updateOne(filter, updateDoc);
             res.send(result)
         })
 
