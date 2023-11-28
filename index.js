@@ -137,6 +137,20 @@ async function run() {
             res.send(result)
         })
 
+        // Creator Dashboard
+        app.post('/allContest', async (req, res) => {
+            const contest = req.body;
+            const result = await contests.insertOne(contest);
+            res.send(result)
+        })
+
+        app.get('/participants/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await contests.findOne(query);
+            res.send(result)
+        })
+
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
