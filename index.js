@@ -17,7 +17,8 @@ const client = new MongoClient(uri, {
 
 // Middleware
 app.use(cors({
-    origin: ['http://localhost:5173']
+    origin: ['https://contest-platform-d76ed.web.app'],
+
 }));
 app.use(express.json());
 
@@ -99,7 +100,7 @@ async function run() {
         // User participants
         app.get('/user/:email', async (req, res) => {
             const email = req.params.email;
-            const query = { participant: email }
+            const query = { participants: email }
             const result = await contests.find(query).toArray();
             res.send(result)
         })
@@ -209,8 +210,8 @@ async function run() {
 
 
         // Send a ping to confirm a successful connection
-        await client.db("admin").command({ ping: 1 });
-        console.log("Pinged your deployment. You successfully connected to MongoDB!");
+        // await client.db("admin").command({ ping: 1 });
+        // console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
 
         // await client.close();
