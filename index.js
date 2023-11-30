@@ -90,8 +90,8 @@ async function run() {
 
         // Popular
         app.get('/popular', async (req, res) => {
-            const query = { participant: { $size: 1 } };
-            const options = { sort: { participant: -1 } };
+            const query = { participants: { $size: 1 } };
+            const options = { sort: { participants: -1 } };
             const result = await contests.find(query, options).limit(5).toArray();
             res.send(result)
         })
@@ -137,6 +137,26 @@ async function run() {
             res.send(result)
         })
 
+        // Payment
+        app.get('/payment/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await contests.findOne(query);
+            res.send(result)
+        })
+
+        app.patch('/payment', async (req, res) => {
+            const user = req.body;
+            const filter = { _id: new ObjectId(user?.id) }
+            const updateDoc = {
+                $push: {
+                    participants: user.email
+                }
+            }
+            const result = await contests.updateOne(filter, updateDoc);
+            res.send(result)
+        })
+
         // Creator Dashboard
         app.post('/allContest', async (req, res) => {
             const contest = req.body;
@@ -148,6 +168,42 @@ async function run() {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) }
             const result = await contests.findOne(query);
+            res.send(result)
+        })
+
+        // Edit Contest
+        app.get('/editContest/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await contests.findOne(query);
+            res.send(result)
+        })
+
+        app.put('/editContest/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) }
+            const option = { upsert: true }
+            const editContest = req.body;
+
+            const newContest = {
+                $set: {
+                    name: editContest.name,
+                    image: editContest.image,
+                    price: editContest.price,
+                    prize: editContest.prize,
+                    category: editContest.category,
+                    deadline: editContest.deadline,
+                    details: editContest.details
+                }
+            }
+            const result = await contests.updateOne(filter, newContest, option);
+            res.send(result)
+        })
+
+        // Get winner
+        app.get('/winner', async (req, res) => {
+            const query = { winner: { $regex: "gmail.com" } }
+            const result = await contests.find(query).limit(3).toArray();
             res.send(result)
         })
 
